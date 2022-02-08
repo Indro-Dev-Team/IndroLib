@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.indroDevTeam.indroLib</groupId>
-    <artifactId>Main</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>IndroLib</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>IndroLib</name>

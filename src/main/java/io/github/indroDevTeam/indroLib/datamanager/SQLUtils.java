@@ -1,4 +1,6 @@
-package indrocraftapi.datamanager;
+package io.github.indroDevTeam.indroLib.datamanager;
+
+import org.bukkit.Bukkit;
 
 import java.sql.*;
 
@@ -45,14 +47,21 @@ public class SQLUtils {
     /**
      * @param name     What name do you want to u se for the table
      * @param idColumn This is the unique ID column generally 'NAME'
+     * @param columns any other columns for this table in form of: "column_name DATATYPE constants"
      */
-    public void createTable(String name, String idColumn) {
+    public void createTable(String name, String idColumn, String... columns) {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
             conn = getCorrectConn();
-            ps = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + name + " (" + idColumn
-                    + " VARCHAR(100),PRIMARY KEY (" + idColumn + "))");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("CREATE TABLE IF NOT EXISTS ").append(name).append(" (").append(idColumn).append(" VARCHAR(100)");
+            for (String col : columns)
+                sb.append(", ").append(col);
+            sb.append(", PRIMARY KEY (").append(idColumn).append("))");
+
+            ps = conn.prepareStatement(sb.toString());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,13 +102,9 @@ public class SQLUtils {
             try {
                 if (!rowExists(idColumn, idEquals, tableName)) {
                     conn = getCorrectConn();
-                    ps = conn.prepareStatement("SELECT * FROM " + tableName);
-                    ResultSet results = ps.executeQuery();
-                    results.next();
-                    PreparedStatement ps2 = conn.prepareStatement("INSERT INTO " + tableName + " ("
-                            + idColumn + ") VALUES (?)");
-                    ps2.setString(1, idEquals);
-                    ps2.executeUpdate();
+                    ps = conn.prepareStatement("INSERT INTO " + tableName + " (" + idColumn + ") VALUES (?)");
+                    ps.setString(1, idEquals);
+                    ps.executeUpdate();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -154,9 +159,9 @@ public class SQLUtils {
                     + idColumn + "=?");
             ps.setString(1, idEquals);
             ResultSet rs = ps.executeQuery();
-            double info;
+            Object info;
             if (rs.next()) {
-                info = rs.getDouble(column);
+                info = rs.getObject(column);
                 return info;
             }
         } catch (SQLException e) {
@@ -349,172 +354,34 @@ public class SQLUtils {
         }
     }
 
-
-/*
-    *//**
-     * @param value     Data to be saved in form of a string, number will be converted depending on dataType
-     * @param idColumn  identifier column to check
-     * @param id        String that the id column is checked against
-     * @param column    column to insert data
-     * @param tableName table to insert data
-     *//*
-    public void setData(String value, String idColumn, String id, String column, String tableName) {
-        if (conn()) {return;}
+    /**
+     * @param tableName Name of the table that contains the rows
+     * @param constraints *EXPERIMENTAL* what constraints would you like to use. This must be a column name and value
+     *                   seperated by a space: "UUID 12i31bi-k1j2b3kj-1k2jj3k"
+     *                   this will append: "WHERE UUID='12i31bi-k1j2b3kj-1k2jj3k'"
+     * @return returns the number of rows that fit this criteria
+     */
+    public int countRows(String tableName, String... constraints) {
+        Connection conn = null;
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("UPDATE " + tableName + " SET `" + column + "`=? WHERE "
-                    + idColumn + "=?");
-            if (isNum("int", value)) {
-                int valNum = Integer.parseInt(value);
-                ps.setInt(1, valNum);
-                ps.setString(2, id);
-            } else if (isNum("float", value)) {
-                float valNum = Float.parseFloat(value);
-                ps.setFloat(1, valNum);
-                ps.setString(2, id);
-            } else if (isNum("double", value)) {
-                double valNum = Double.parseDouble(value);
-                ps.setDouble(1, valNum);
-                ps.setString(2, id);
-            } else {
-                ps.setString(1, value);
-                ps.setString(2, id);
+            conn = getCorrectConn();
+            StringBuilder sb = new StringBuilder();
+            sb.append("SELECT count(*) FROM ").append(tableName);
+            if (constraints.length >= 1) {
+                for (String con : constraints) {
+                    String[] args = con.split(" ");
+                    if (con.equals(constraints[0])) {
+                        sb.append(" WHERE ").append("`").append(args[0]).append("`").append("=?");
+                    } else {
+                        sb.append(" AND ").append("`").append(args[0]).append("`").append("=?");
+                    }
+                }
             }
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    *//**
-     * @param column    What column is the desired cell in
-     * @param idColumn  What is the id column used for this table
-     * @param idEquals  What id are you looking for?
-     * @param tableName What is the name of the table
-     * @return returns the number value of the specified cell
-     *//*
-    public int getInt(String column, String idColumn, String idEquals, String tableName) {
-        if (conn()) {return 0;}
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT " + column + " FROM " + tableName + " WHERE "
-                    + idColumn + "=?");
-            ps.setString(1, idEquals);
-            ResultSet rs = ps.executeQuery();
-            int info;
-            if (rs.next()) {
-                info = rs.getInt(column);
-                return info;
+            ps = conn.prepareStatement(sb.toString());
+            for (int i = 1; i <= constraints.length; i++) {
+                ps.setString(i, constraints[i - 1].replace(constraints[i - 1].split(" ")[0] + " ", ""));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    *//**
-     * @param column    What column is the desired cell in
-     * @param idColumn  What is the id column used for this table
-     * @param idEquals  What id are you looking for?
-     * @param tableName What is the name of the table
-     * @return returns the string value of the specified cell
-     *//*
-    public String getString(String column, String idColumn, String idEquals, String tableName) {
-        if (conn()) {return "";}
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT `" + column + "` FROM " + tableName + " WHERE "
-                    + idColumn + "=?");
-            ps.setString(1, idEquals);
-            ResultSet rs = ps.executeQuery();
-            String info;
-            if (rs.next()) {
-                info = rs.getString(column);
-                return info;
-            }
-        } catch (SQLSyntaxErrorException e) {
-            try {
-                PreparedStatement p = conn.prepareStatement("UPDATE " + tableName + " SET `" + column
-                        + "`=' ' WHERE " + idColumn + "=" + idEquals);
-                p.executeUpdate();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    *//**
-     * @param column    What column is the desired cell in
-     * @param idColumn  What is the id column used for this table
-     * @param idEquals  What id are you looking for?
-     * @param tableName What is the name of the table
-     * @return returns the string value of the specified cell
-     *//*
-    public double getDouble(String column, String idColumn, String idEquals, String tableName) {
-        if (conn()) {return 0;}
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT " + column + " FROM " + tableName + " WHERE "
-                    + idColumn + "=?");
-            ps.setString(1, idEquals);
-            ResultSet rs = ps.executeQuery();
-            double info;
-            if (rs.next()) {
-                info = rs.getDouble(column);
-                return info;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    *//**
-     * @param column    What column is the desired cell in
-     * @param idColumn  What is the id column used for this table
-     * @param idEquals  What id are you looking for?
-     * @param tableName What is the name of the table
-     * @return returns the string value of the specified cell
-     *//*
-    public float getFloat(String column, String idColumn, String idEquals, String tableName) {
-        if (conn()) {return 0;}
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT " + column + " FROM " + tableName + " WHERE "
-                    + idColumn + "=?");
-            ps.setString(1, idEquals);
-            ResultSet rs = ps.executeQuery();
-            float info;
-            if (rs.next()) {
-                info = rs.getFloat(column);
-                return info;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    public List<String> getEntireColumn(String columnName, String tableName) {
-        if (conn()) {return  new ArrayList<>();}
-        try {
-            List<String> data = new ArrayList<>();
-            PreparedStatement ps = conn.prepareStatement("SELECT " + columnName + " FROM " + tableName);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                data.add(rs.getString(columnName));
-            }
-            return data;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
-
-    */
-/*
-    public int countRows(String tableName) {
-        if (conn()) {return 0;}
-        try {
-            PreparedStatement ps = conn.prepareStatement("SELECT count(*) FROM " + tableName);
             ResultSet rs = ps.executeQuery();
             int info;
             if (rs.next()) {
@@ -523,11 +390,13 @@ public class SQLUtils {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            disconnector(conn, ps);
         }
         return 0;
     }
 
-    *//**
+    /**
      * @param column    What is the name of the column you want to alter
      * @param dataType  What data type do u want to set it to
      * @param tableName In what table?

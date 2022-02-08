@@ -1,4 +1,4 @@
-package indrocraftapi.datamanager;
+package io.github.indroDevTeam.indroLib.datamanager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
