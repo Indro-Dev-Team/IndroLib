@@ -19,18 +19,17 @@ public class RankUtils {
      * @apiNote this must be run to create table in database
      */
     public static void createRankTable(SQLUtils sqlUtils) {
-        sqlUtils.makeQuery("create table if not exists rankPresets(" +
-                "rankId VARCHAR(100) NOT NULL," +
-                "display VARCHAR(100) NOT NULL," +
-                "lBrace VARCHAR(100) NOT NULL," +
-                "rBrace VARCHAR(100) NOT NULL," +
-                "primaryColour VARCHAR(100) NOT NULL," +
-                "secondaryColour VARCHAR(100) NOT NULL," +
-                "nextRankId VARCHAR(100) NOT NULL," +
-                "nextAdvancement VARCHAR(100) NOT NULL," +
-                "level INT NOT NULL," +
-                "PRIMARY KEY ( rankId )" +
-                ");");
+        sqlUtils.createTable("rankPresets",
+                "rankId",
+                "display VARCHAR(100)",
+                "lBrace VARCHAR(100)",
+                "rBrace VARCHAR(100)",
+                "primaryColour VARCHAR(100)",
+                "secondaryColour VARCHAR(100)",
+                "nextRankId VARCHAR(100)",
+                "nextAdvancement VARCHAR(100)",
+                "level INT"
+        );
     }
 
     /**
@@ -76,7 +75,7 @@ public class RankUtils {
 
     /**
      * @param player Target player
-     * @param rank Rank object being set
+     * @param rank   Rank object being set
      */
     public static void setPlayerRank(Player player, Rank rank) {
         sqlUtils.setData(rank.getId(), "UUID", player.getUniqueId().toString(), "rank", "players");
@@ -123,7 +122,7 @@ public class RankUtils {
     }
 
     /**
-     * @param target Target player
+     * @param target   Target player
      * @param sqlUtils Instance of the sqlUtils
      * @return Returns the rank object of the next rank
      */
@@ -137,22 +136,38 @@ public class RankUtils {
      */
     public static ChatColor readColour(String color) {
         switch (color.toLowerCase()) {
-            case "dark_red": return ChatColor.DARK_RED;
-            case "red": return ChatColor.RED;
-            case "gold": return ChatColor.GOLD;
-            case "yellow": return ChatColor.YELLOW;
-            case "dark_green": return ChatColor.DARK_GREEN;
-            case "green": return ChatColor.GREEN;
-            case "aqua": return ChatColor.AQUA;
-            case "dark_aqua": return ChatColor.DARK_AQUA;
-            case "dark_blue": return ChatColor.DARK_BLUE;
-            case "blue": return ChatColor.BLUE;
-            case "light_purple": return ChatColor.LIGHT_PURPLE;
-            case "dark_purple": return ChatColor.DARK_PURPLE;
-            case "white": return ChatColor.WHITE;
-            case "gray": return ChatColor.GRAY;
-            case "dark_gray": return ChatColor.DARK_GRAY;
-            case "black": return ChatColor.BLACK;
+            case "dark_red":
+                return ChatColor.DARK_RED;
+            case "red":
+                return ChatColor.RED;
+            case "gold":
+                return ChatColor.GOLD;
+            case "yellow":
+                return ChatColor.YELLOW;
+            case "dark_green":
+                return ChatColor.DARK_GREEN;
+            case "green":
+                return ChatColor.GREEN;
+            case "aqua":
+                return ChatColor.AQUA;
+            case "dark_aqua":
+                return ChatColor.DARK_AQUA;
+            case "dark_blue":
+                return ChatColor.DARK_BLUE;
+            case "blue":
+                return ChatColor.BLUE;
+            case "light_purple":
+                return ChatColor.LIGHT_PURPLE;
+            case "dark_purple":
+                return ChatColor.DARK_PURPLE;
+            case "white":
+                return ChatColor.WHITE;
+            case "gray":
+                return ChatColor.GRAY;
+            case "dark_gray":
+                return ChatColor.DARK_GRAY;
+            case "black":
+                return ChatColor.BLACK;
             default:
                 Bukkit.getLogger().warning("'" + color + "' is an invalid colour! try reloading the plugin.");
                 Bukkit.getLogger().warning("Defaulting to white!");
@@ -162,13 +177,13 @@ public class RankUtils {
 
     /**
      * @param player target player
-     * @param name name of advancement
+     * @param name   name of advancement
      * @return true if the target has the advancement and false if they don't
      */
     public static boolean hasAdvancement(Player player, String name) {
         // name should be something like minecraft:husbandry/break_diamond_hoe
         Advancement a = getAdvancement(name);
-        if(a == null){
+        if (a == null) {
             // advancement does not exists.
             return false;
         }

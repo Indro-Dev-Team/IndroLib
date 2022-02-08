@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class Warp {
 
     /**
-     * @param name Name of new warp
+     * @param name     Name of new warp
      * @param location Location object of new warp
      */
     public Warp(String name, Location location) {
@@ -24,13 +24,13 @@ public class Warp {
     }
 
     /**
-     * @param name Name of new warp
+     * @param name  Name of new warp
      * @param world World object for location
-     * @param x X coordinate (double)
-     * @param y y coordinate (double)
-     * @param z z coordinate  (double)
+     * @param x     X coordinate (double)
+     * @param y     y coordinate (double)
+     * @param z     z coordinate  (double)
      * @param pitch pitch (float)
-     * @param yaw yaw (float)
+     * @param yaw   yaw (float)
      */
     public Warp(String name, World world, Double x, Double y, Double z, Float pitch, Float yaw) {
         setWorld(world);
@@ -61,27 +61,35 @@ public class Warp {
     public World getWorld() {
         return world;
     }
+
     public String getWarpName() {
         return warpName;
     }
+
     public String getId() {
         return id;
     }
+
     public Double getX() {
         return x;
     }
+
     public Double getY() {
         return y;
     }
+
     public Double getZ() {
         return z;
     }
+
     public Float getPitch() {
         return pitch;
     }
+
     public Float getYaw() {
         return yaw;
     }
+
     public Location getLocation() {
         return location;
     }
@@ -90,27 +98,35 @@ public class Warp {
     public void setWorld(World world) {
         this.world = world;
     }
+
     public void setWarpName(String warpName) {
         this.warpName = warpName;
     }
+
     public void setId(String id) {
         this.id = id;
     }
+
     public void setX(Double x) {
         this.x = x;
     }
+
     public void setY(Double y) {
         this.y = y;
     }
+
     public void setZ(Double z) {
         this.z = z;
     }
+
     public void setPitch(Float pitch) {
         this.pitch = pitch;
     }
+
     public void setYaw(Float yaw) {
         this.yaw = yaw;
     }
+
     public void setLocation(Location location) {
         this.location = location;
     }

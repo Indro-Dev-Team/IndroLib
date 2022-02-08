@@ -76,7 +76,7 @@ public class SQLConnector {
     }
 
     public Connection getSQLiteConnection() {
-        if(!this.PLUGIN.getDataFolder().exists()) {
+        if (!this.PLUGIN.getDataFolder().exists()) {
             try {
                 this.PLUGIN.getDataFolder().mkdir();
             } catch (Exception e) {
@@ -84,15 +84,15 @@ public class SQLConnector {
             }
         }
         File dataFolder = new File(PLUGIN.getDataFolder(), DATABASE + ".db");
-        if (!dataFolder.exists()){
+        if (!dataFolder.exists()) {
             try {
                 dataFolder.createNewFile();
             } catch (IOException e) {
-                PLUGIN.getLogger().log(Level.SEVERE, "File write error: "+DATABASE+".db");
+                PLUGIN.getLogger().log(Level.SEVERE, "File write error: " + DATABASE + ".db");
             }
         }
         try {
-            if(connection!=null&&!connection.isClosed()){
+            if (connection != null && !connection.isClosed()) {
                 Bukkit.getLogger().info("connected");
                 return connection;
             }
@@ -101,7 +101,7 @@ public class SQLConnector {
             PLUGIN.getLogger().log(Level.FINE, "Database connected");
             return connection;
         } catch (SQLException ex) {
-            PLUGIN.getLogger().log(Level.SEVERE,"SQLite exception on initialize", ex);
+            PLUGIN.getLogger().log(Level.SEVERE, "SQLite exception on initialize", ex);
         } catch (ClassNotFoundException ex) {
             PLUGIN.getLogger().log(Level.SEVERE, "You need the SQLite JBDC library. Google it. Put it in /lib folder.");
         }
@@ -112,10 +112,10 @@ public class SQLConnector {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
                 //e.printStackTrace(System.err);
-                System.err.println("SQLState: " + ((SQLException)e).getSQLState() + "\n");
-                System.err.println("Error Code: " + ((SQLException)e).getErrorCode() + "\n");
+                System.err.println("SQLState: " + ((SQLException) e).getSQLState() + "\n");
+                System.err.println("Error Code: " + ((SQLException) e).getErrorCode() + "\n");
                 System.err.println("Message: " + e.getMessage() + "\n");
-                System.err.println("error at line: " + e.getStackTrace()[e.getStackTrace().length-1] + "\n");
+                System.err.println("error at line: " + e.getStackTrace()[e.getStackTrace().length - 1] + "\n");
                 System.err.println("The database is not connected! please ensure that the login credentials are " +
                         "correct and the database is running!");
 

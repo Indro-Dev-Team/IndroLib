@@ -47,7 +47,7 @@ public class WarpUtils {
     }
 
     /**
-     * @param warpId Unique id of the warp
+     * @param warpId   Unique id of the warp
      * @param sqlUtils connection to the sql database
      */
     public static void deleteWarp(String warpId, SQLUtils sqlUtils) {
@@ -55,7 +55,7 @@ public class WarpUtils {
     }
 
     /**
-     * @param warp Warp object being deleted
+     * @param warp     Warp object being deleted
      * @param sqlUtils connection to the sql database
      */
     public static void deleteWarp(Warp warp, SQLUtils sqlUtils) {
@@ -63,7 +63,7 @@ public class WarpUtils {
     }
 
     /**
-     * @param warp Warp object being checked for
+     * @param warp     Warp object being checked for
      * @param sqlUtils connection to the sql database
      * @return true if its exists and false if it doesn't
      */
@@ -81,8 +81,8 @@ public class WarpUtils {
     }
 
     /**
-     * @param player Player being teleported
-     * @param warp Warp object that the player is being sent to
+     * @param player     Player being teleported
+     * @param warp       Warp object that the player is being sent to
      * @param restricted set to false if they can teleport between worlds and true if they can't
      */
     public static void teleportWarp(Player player, Warp warp, boolean restricted) {
@@ -101,7 +101,7 @@ public class WarpUtils {
     /**
      * @param s connection to the sql database
      */
-    public static void setupWarpTable(SQLUtils s) {
+    public static void createWarpTable(SQLUtils s) {
         s.createTable(
                 "warpTable",
                 "warpId",

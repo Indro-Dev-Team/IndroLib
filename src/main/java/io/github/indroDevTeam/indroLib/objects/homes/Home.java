@@ -55,33 +55,43 @@ public class Home {
     public World getWorld() {
         return world;
     }
+
     public String getName() {
         return homeName;
     }
+
     public Player getOwner() {
         return owner;
     }
+
     public UUID getOwnerUUID() {
         return ownerUUID;
     }
+
     public String getId() {
         return id;
     }
+
     public Double getX() {
         return x;
     }
+
     public Double getY() {
         return y;
     }
+
     public Double getZ() {
         return z;
     }
+
     public Float getPitch() {
         return pitch;
     }
+
     public Float getYaw() {
         return yaw;
     }
+
     public Location getLocation() {
         return location;
     }
@@ -90,33 +100,43 @@ public class Home {
     public void setWorld(World world) {
         this.world = world;
     }
+
     public void setHomeName(String homeName) {
         this.homeName = homeName;
     }
+
     public void setOwner(Player owner) {
         this.owner = owner;
     }
+
     public void setOwnerUUID(UUID ownerUUID) {
         this.ownerUUID = ownerUUID;
     }
+
     public void setId(String id) {
         this.id = id;
     }
+
     public void setX(Double x) {
         this.x = x;
     }
+
     public void setY(Double y) {
         this.y = y;
     }
+
     public void setZ(Double z) {
         this.z = z;
     }
+
     public void setPitch(Float pitch) {
         this.pitch = pitch;
     }
+
     public void setYaw(Float yaw) {
         this.yaw = yaw;
     }
+
     public void setLocation(Location location) {
         this.location = location;
     }

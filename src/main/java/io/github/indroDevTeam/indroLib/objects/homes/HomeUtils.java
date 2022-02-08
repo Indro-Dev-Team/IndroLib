@@ -18,7 +18,7 @@ public class HomeUtils {
 
     /**
      * @param homeName Name of the home you want to get
-     * @param owner owner of the home you want to get
+     * @param owner    owner of the home you want to get
      * @return returns a home object containing all the relevant data
      * @apiNote This method should be used for getting a Home object and is NOT interchange able with getHomeByLocation
      */
@@ -38,10 +38,9 @@ public class HomeUtils {
 
 
     /**
-     * @param owner owner of the home you are checking for
+     * @param owner    owner of the home you are checking for
      * @param location location being checked for a home
      * @return returns a home if one is set at that location and returns null if the home does not exist
-     *
      * @apiNote this should only be used to check for home by using their location and not be relied upon to get Home
      * object as it is imprecise and can return null
      */
@@ -59,9 +58,9 @@ public class HomeUtils {
     }
 
     /**
-     * @param name name of the new home
+     * @param name     name of the new home
      * @param location Location object of the
-     * @param owner who is the owner of the home
+     * @param owner    who is the owner of the home
      * @apiNote this method create a new home in the database and returns it as an object
      */
     public static Home createHome(String name, Location location, Player owner, SQLUtils sqlUtils) {
@@ -83,7 +82,7 @@ public class HomeUtils {
 
     /**
      * @param homeName Name of target home
-     * @param owner Owner of home for removal
+     * @param owner    Owner of home for removal
      * @apiNote This method does not use the recommended Home object
      */
     public static void deleteHome(String homeName, Player owner, SQLUtils sqlUtils) {
@@ -105,19 +104,20 @@ public class HomeUtils {
      * @apiNote This must be run at least once to set up the table in the database for saving home data
      */
     public static void createHomeTable(SQLUtils sqlUtils) {
-        sqlUtils.createTable("homeTable", "homeId");
-        sqlUtils.createColumn("owner", "VARCHAR(100)", "homeTable");
-        sqlUtils.createColumn("world", "VARCHAR(100)", "homeTable");
-        sqlUtils.createColumn("x", "DOUBLE", "homeTable");
-        sqlUtils.createColumn("y", "DOUBLE", "homeTable");
-        sqlUtils.createColumn("z", "DOUBLE", "homeTable");
-        sqlUtils.createColumn("yaw", "FLOAT", "homeTable");
-        sqlUtils.createColumn("pitch", "FLOAT", "homeTable");
+        sqlUtils.createTable("homeTable", "homeId",
+                "owner VARCHAR(100)",
+                "world VARCHAR(100)",
+                "x DOUBLE",
+                "y DOUBLE",
+                "z DOUBLE",
+                "yaw FLOAT",
+                "pitch FLOAT"
+        );
     }
 
     /**
      * @param homeName Name of the home being teleported to
-     * @param owner Owner of the home and target being teleported
+     * @param owner    Owner of the home and target being teleported
      * @apiNote This method doesn't use the recommended Home object
      */
     public static void teleportHome(String homeName, Player owner, SQLUtils sqlUtils) {

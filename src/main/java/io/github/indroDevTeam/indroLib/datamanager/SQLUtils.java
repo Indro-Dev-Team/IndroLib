@@ -1,8 +1,9 @@
 package io.github.indroDevTeam.indroLib.datamanager;
 
-import org.bukkit.Bukkit;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class SQLUtils {
     /**
      * @param name     What name do you want to u se for the table
      * @param idColumn This is the unique ID column generally 'NAME'
-     * @param columns any other columns for this table in form of: "column_name DATATYPE constants"
+     * @param columns  any other columns for this table in form of: "column_name DATATYPE constants"
      */
     public void createTable(String name, String idColumn, String... columns) {
         Connection conn = null;
@@ -101,24 +102,23 @@ public class SQLUtils {
     public void createRow(String idColumn, String idEquals, String tableName) {
         Connection conn = null;
         PreparedStatement ps = null;
-            try {
-                if (!rowExists(idColumn, idEquals, tableName)) {
-                    conn = getCorrectConn();
-                    ps = conn.prepareStatement("INSERT INTO " + tableName + " (" + idColumn + ") VALUES (?)");
-                    ps.setString(1, idEquals);
-                    ps.executeUpdate();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                disconnector(conn, ps);
+        try {
+            if (!rowExists(idColumn, idEquals, tableName)) {
+                conn = getCorrectConn();
+                ps = conn.prepareStatement("INSERT INTO " + tableName + " (" + idColumn + ") VALUES (?)");
+                ps.setString(1, idEquals);
+                ps.executeUpdate();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnector(conn, ps);
+        }
     }
 
     /*
      *  delete statements
      */
-
 
 
     public void deleteRow(String idColumn, String idEquals, String tableName) {
@@ -353,7 +353,7 @@ public class SQLUtils {
     }
 
     /**
-     * @param query SQL query to be executed
+     * @param query      SQL query to be executed
      * @param parameters parameters for the query in the order that they should be inserted
      */
     public void makeQuery(String query, Object... parameters) {
@@ -377,10 +377,10 @@ public class SQLUtils {
     }
 
     /**
-     * @param tableName Name of the table that contains the rows
+     * @param tableName   Name of the table that contains the rows
      * @param constraints *EXPERIMENTAL* what constraints would you like to use. This must be a column name and value
-     *                   seperated by a space: "UUID 12i31bi-k1j2b3kj-1k2jj3k"
-     *                   this will append: "WHERE UUID='12i31bi-k1j2b3kj-1k2jj3k'"
+     *                    seperated by a space: "UUID 12i31bi-k1j2b3kj-1k2jj3k"
+     *                    this will append: "WHERE UUID='12i31bi-k1j2b3kj-1k2jj3k'"
      * @return returns the number of rows that fit this criteria
      */
     public int countRows(String tableName, String... constraints) {
@@ -417,5 +417,4 @@ public class SQLUtils {
         }
         return 0;
     }
-
 }

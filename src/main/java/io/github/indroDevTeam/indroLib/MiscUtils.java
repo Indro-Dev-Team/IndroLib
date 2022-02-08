@@ -1,23 +1,42 @@
 package io.github.indroDevTeam.indroLib;
 
 import io.github.indroDevTeam.indroLib.datamanager.SQLUtils;
+import io.github.indroDevTeam.indroLib.objects.homes.HomeUtils;
+import io.github.indroDevTeam.indroLib.objects.ranks.RankUtils;
+import io.github.indroDevTeam.indroLib.objects.warps.WarpUtils;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
-public class SmallUtils {
+public class MiscUtils {
     /**
      * @param s SQL connection
      * @return true if setup was successful and false if an error occurred
      * @apiNote This method fully sets up all the tables used for this plugin
      */
     public static boolean setupDatabase(SQLUtils s) {
-        return false;
+        try {
+            HomeUtils.createHomeTable(s);
+            RankUtils.createRankTable(s);
+            WarpUtils.createWarpTable(s);
+            MiscUtils.createMainTable(s);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void createMainTable(SQLUtils s) {
+        s.createTable("players", "UUID",
+                "ign VARCHAR(100)",
+                "nameColour VARCHAR(100)",
+                "rank VARCHAR(100)"
+        );
     }
 
     /**
-     * @param player Target player
+     * @param player        Target player
      * @param enablePassive true = enabled, false = disabled
-     * @param s sql connection
+     * @param s             sql connection
      */
     public void setPassive(Player player, boolean enablePassive, SQLUtils s) {
         passiveSetup(s);
@@ -30,7 +49,7 @@ public class SmallUtils {
 
     /**
      * @param player Target player
-     * @param s sql connection
+     * @param s      sql connection
      * @return true if they are in passive mode and false if they aren't
      */
     public boolean getPassive(Player player, SQLUtils s) {
@@ -42,7 +61,7 @@ public class SmallUtils {
 
     /**
      * @param player Target player
-     * @param s sql connection
+     * @param s      sql connection
      */
     public void togglePassive(Player player, SQLUtils s) {
         boolean passive = getPassive(player, s);
