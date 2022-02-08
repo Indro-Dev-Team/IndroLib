@@ -3,6 +3,8 @@ package io.github.indroDevTeam.indroLib.datamanager;
 import org.bukkit.Bukkit;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class SQLUtils {
@@ -164,6 +166,26 @@ public class SQLUtils {
                 info = rs.getObject(column);
                 return info;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnector(conn, ps);
+        }
+        return null;
+    }
+
+    public List<Object> getColumn(String columnName, String tableName) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = getCorrectConn();
+            ps = conn.prepareStatement("SELECT `" + columnName + "` FROM " + tableName);
+            ResultSet rs = ps.executeQuery();
+            List<Object> data = new ArrayList<>();
+            while (rs.next()) {
+                data.add(rs.getObject(columnName));
+            }
+            return data;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -395,41 +417,5 @@ public class SQLUtils {
         }
         return 0;
     }
-
-    /**
-     * @param column    What is the name of the column you want to alter
-     * @param dataType  What data type do u want to set it to
-     * @param tableName In what table?
-     *//*
-    public void setDataType(String column, String dataType, String tableName) {
-        if (conn()) {return;}
-        try {
-            PreparedStatement ps = conn.prepareStatement("ALTER TABLE " + tableName + " MODIFY " + column + " "
-                    + dataType);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public boolean isNum(String type, String num) {
-        try {
-            if (type.equalsIgnoreCase("int")) {
-                int i = Integer.parseInt(num);
-                return num.equals(String.valueOf(i));
-            } else if (type.equalsIgnoreCase("float")) {
-                float i = Float.parseFloat(num);
-                return num.equals(String.valueOf(i));
-            } else if (type.equalsIgnoreCase("double")) {
-                double i = Double.parseDouble(num);
-                return num.equals(String.valueOf(i));
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }*/
 
 }

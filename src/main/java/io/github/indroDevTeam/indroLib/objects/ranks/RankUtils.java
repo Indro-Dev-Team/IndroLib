@@ -80,6 +80,8 @@ public class RankUtils {
      */
     public static void setPlayerRank(Player player, Rank rank) {
         sqlUtils.setData(rank.getId(), "UUID", player.getUniqueId().toString(), "rank", "players");
+        RankEvent rankEvent = new RankEvent(player, rank);
+        Bukkit.getPluginManager().callEvent(rankEvent);
     }
 
     /**
@@ -88,6 +90,8 @@ public class RankUtils {
      */
     public static void setPlayerRank(Player player, String rankId) {
         sqlUtils.setData(rankId, "UUID", player.getUniqueId().toString(), "rank", "players");
+        RankEvent rankEvent = new RankEvent(player, getRank(rankId));
+        Bukkit.getPluginManager().callEvent(rankEvent);
     }
 
     public static void setPlayerNameColour(Player player, String colour) {
