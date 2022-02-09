@@ -1,6 +1,5 @@
 package io.github.indroDevTeam.indroLib.datamanager;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
@@ -39,12 +38,14 @@ public class SQLConnector {
     private final String PORT;
     private final String DATABASE;
     private final String USERNAME;
-    private Status status = Status.NOT_READY;
+    private Status status;
+    private boolean ready;
 
     public boolean isUseSQLite() {
         return this.USE_SQLITE;
     }
     public Status getStatus() {return this.status;}
+    public boolean isReady() {return this.ready;}
 
     /**
      * @param database What is the name of the database you want to connect to?
@@ -64,6 +65,7 @@ public class SQLConnector {
         this.USE_SQLITE = useSQLite;
         this.PLUGIN = plugin;
         this.status = Status.READY;
+        this.ready = true;
     }
 
     public Connection getMySQLConnection() {
@@ -137,5 +139,6 @@ public class SQLConnector {
             }
         }
         this.status = Status.NOT_READY;
+        this.ready = false;
     }
 }
