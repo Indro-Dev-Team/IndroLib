@@ -133,6 +133,9 @@ public class RankUtils {
      * @param color Converts string of a ChatColour name to a ChatColour
      */
     public static ChatColor readColour(String color) {
+        if (color == null) {
+            return ChatColor.WHITE;
+        }
         switch (color.toLowerCase()) {
             case "dark_red":
                 return ChatColor.DARK_RED;
