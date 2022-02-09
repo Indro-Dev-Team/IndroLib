@@ -19,7 +19,7 @@ public class SQLConnector {
      *  +-----------------------------------------------+
      */
 
-    private enum Status {
+    public enum Status {
         /**
          * When Status is NOT_READY this class has been initialized incorrectly
          */
