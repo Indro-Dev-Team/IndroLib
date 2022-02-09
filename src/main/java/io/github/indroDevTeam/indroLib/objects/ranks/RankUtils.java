@@ -1,6 +1,5 @@
 package io.github.indroDevTeam.indroLib.objects.ranks;
 
-import io.github.indroDevTeam.indroLib.Main;
 import io.github.indroDevTeam.indroLib.datamanager.SQLUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,8 +10,6 @@ import org.bukkit.entity.Player;
 import java.util.Iterator;
 
 public class RankUtils {
-
-    private static final SQLUtils sqlUtils = new SQLUtils(Main.getPlugin(Main.class).sqlConnector);
 
     /**
      * @param sqlUtils connection to database
@@ -35,7 +32,7 @@ public class RankUtils {
     /**
      * @param rankId unique id for rank being deleted
      */
-    public static void deleteRank(String rankId) {
+    public static void deleteRank(String rankId, SQLUtils sqlUtils) {
         sqlUtils.deleteRow("rankId", rankId, "rankPresets");
     }
 
@@ -44,7 +41,7 @@ public class RankUtils {
      * @return Rank object
      * @apiNote this method streamlines getting a rank object be doing all the information from the database for you
      */
-    public static Rank getRank(String rankId) {
+    public static Rank getRank(String rankId, SQLUtils sqlUtils) {
         return new Rank(
                 rankId,
                 (String) sqlUtils.getData("display", "rankID", rankId, "rankPresets"),
@@ -69,7 +66,8 @@ public class RankUtils {
      */
     public static Rank getRank(Player player, SQLUtils sqlUtils) {
         return getRank(
-                (String) sqlUtils.getData("rank", "UUID", player.getUniqueId().toString(), "players")
+                (String) sqlUtils.getData("rank", "UUID", player.getUniqueId().toString(), "players"),
+                sqlUtils
         );
     }
 
@@ -77,7 +75,7 @@ public class RankUtils {
      * @param player Target player
      * @param rank   Rank object being set
      */
-    public static void setPlayerRank(Player player, Rank rank) {
+    public static void setPlayerRank(Player player, Rank rank, SQLUtils sqlUtils) {
         sqlUtils.setData(rank.getId(), "UUID", player.getUniqueId().toString(), "rank", "players");
         RankEvent rankEvent = new RankEvent(player, rank);
         Bukkit.getPluginManager().callEvent(rankEvent);
@@ -87,13 +85,13 @@ public class RankUtils {
      * @param player Target player
      * @param rankId id of rank being set
      */
-    public static void setPlayerRank(Player player, String rankId) {
+    public static void setPlayerRank(Player player, String rankId, SQLUtils sqlUtils) {
         sqlUtils.setData(rankId, "UUID", player.getUniqueId().toString(), "rank", "players");
-        RankEvent rankEvent = new RankEvent(player, getRank(rankId));
+        RankEvent rankEvent = new RankEvent(player, getRank(rankId, sqlUtils));
         Bukkit.getPluginManager().callEvent(rankEvent);
     }
 
-    public static void setPlayerNameColour(Player player, String colour) {
+    public static void setPlayerNameColour(Player player, String colour, SQLUtils sqlUtils) {
         sqlUtils.setData(colour, "UUID", player.getUniqueId().toString(), "nameColour", "players");
     }
 
@@ -101,11 +99,11 @@ public class RankUtils {
      * @param player Target player
      * @apiNote This method updates the players rank and nameColour thus must be called after setting either
      */
-    public static void loadPlayerRank(Player player) {
+    public static void loadPlayerRank(Player player, SQLUtils sqlUtils) {
         String rankId = (String) sqlUtils.getData(
                 "rank", "UUID", player.getUniqueId().toString(), "players"
         );
-        Rank rank = getRank(rankId);
+        Rank rank = getRank(rankId, sqlUtils);
 
         //get colours and names
         ChatColor n = readColour((String) sqlUtils.getData(
@@ -128,7 +126,7 @@ public class RankUtils {
      */
     public static Rank getNextRank(Player target, SQLUtils sqlUtils) {
         Rank currentRank = getRank(target, sqlUtils);
-        return getRank(getRank(currentRank.getId()).getNextRankId());
+        return getRank(getRank(currentRank.getId(), sqlUtils).getNextRankId(), sqlUtils);
     }
 
     /**
