@@ -7,6 +7,7 @@ io\github\indroDevTeam\indroLib\datamanager\SQLUtils.class
 io\github\indroDevTeam\indroLib\objects\ranks\RankUtils.class
 io\github\indroDevTeam\indroLib\objects\homes\Home.class
 io\github\indroDevTeam\indroLib\objects\warps\WarpUtils.class
+io\github\indroDevTeam\indroLib\datamanager\SQLConnector$Status.class
 io\github\indroDevTeam\indroLib\datamanager\SQLConnector.class
 io\github\indroDevTeam\indroLib\datamanager\ConfigUtils.class
 io\github\indroDevTeam\indroLib\objects\ranks\RankEvent.class

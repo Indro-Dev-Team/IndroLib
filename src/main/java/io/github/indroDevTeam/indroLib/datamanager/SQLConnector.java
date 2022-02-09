@@ -19,18 +19,32 @@ public class SQLConnector {
      *  +-----------------------------------------------+
      */
 
+    private enum Status {
+        /**
+         * When Status is NOT_READY this class has been initialized incorrectly
+         */
+        NOT_READY,
+        READY,
+        CONNECTING,
+        CONNECTED,
+        DISCONNECTING,
+        DISCONNECTED
+    }
+
     public Connection connection;
     private final Plugin PLUGIN;
-    private final boolean USESQLITE;
+    private final boolean USE_SQLITE;
     private final String PASSWORD;
     private final String HOST;
     private final String PORT;
     private final String DATABASE;
     private final String USERNAME;
+    private Status status = Status.NOT_READY;
 
     public boolean isUseSQLite() {
-        return USESQLITE;
+        return this.USE_SQLITE;
     }
+    public Status getStatus() {return this.status;}
 
     /**
      * @param database What is the name of the database you want to connect to?
@@ -47,11 +61,13 @@ public class SQLConnector {
         this.HOST = host;
         this.PORT = port;
 
-        this.USESQLITE = useSQLite;
+        this.USE_SQLITE = useSQLite;
         this.PLUGIN = plugin;
+        this.status = Status.READY;
     }
 
     public Connection getMySQLConnection() {
+        this.status = Status.CONNECTING;
         connection = null;
         try {
             connection = DriverManager.getConnection(
@@ -62,20 +78,22 @@ public class SQLConnector {
             printSQLException(e);
             return null;
         }
-        Bukkit.getLogger().info("connected");
+        this.status = Status.CONNECTED;
         return connection;
     }
 
     public void closeConnection(Connection conn) {
-        Bukkit.getLogger().info("Closing the Database...");
+        this.status = Status.DISCONNECTING;
         try {
             conn.close();
         } catch (SQLException e) {
             printSQLException(e);
         }
+        this.status = Status.DISCONNECTED;
     }
 
     public Connection getSQLiteConnection() {
+        this.status = Status.CONNECTING;
         if (!this.PLUGIN.getDataFolder().exists()) {
             try {
                 this.PLUGIN.getDataFolder().mkdir();
@@ -93,12 +111,12 @@ public class SQLConnector {
         }
         try {
             if (connection != null && !connection.isClosed()) {
-                Bukkit.getLogger().info("connected");
+                this.status = Status.CONNECTED;
                 return connection;
             }
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
-            PLUGIN.getLogger().log(Level.FINE, "Database connected");
+            this.status = Status.CONNECTED;
             return connection;
         } catch (SQLException ex) {
             PLUGIN.getLogger().log(Level.SEVERE, "SQLite exception on initialize", ex);
@@ -108,23 +126,16 @@ public class SQLConnector {
         return null;
     }
 
-    public static void printSQLException(SQLException ex) {
+    public void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
-                //e.printStackTrace(System.err);
                 System.err.println("SQLState: " + ((SQLException) e).getSQLState() + "\n");
                 System.err.println("Error Code: " + ((SQLException) e).getErrorCode() + "\n");
                 System.err.println("Message: " + e.getMessage() + "\n");
-                System.err.println("error at line: " + e.getStackTrace()[e.getStackTrace().length - 1] + "\n");
                 System.err.println("The database is not connected! please ensure that the login credentials are " +
                         "correct and the database is running!");
-
-                /*Throwable t = ex.getCause();
-                while (t != null) {
-                    System.out.println("Cause: " + t);
-                    t = t.getCause();
-                }*/
             }
         }
+        this.status = Status.NOT_READY;
     }
 }
