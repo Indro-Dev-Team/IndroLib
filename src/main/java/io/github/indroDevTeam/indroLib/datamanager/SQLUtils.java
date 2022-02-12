@@ -32,7 +32,7 @@ public class SQLUtils {
         }
     }
 
-    private void disconnector(Connection conn, PreparedStatement ps) {
+    public void disconnector(Connection conn, PreparedStatement ps) {
         try {
             if (ps != null)
                 ps.close();
