@@ -1,13 +1,20 @@
 package io.github.indroDevTeam.indroLib.objects.ranks;
 
 import io.github.indroDevTeam.indroLib.datamanager.SQLUtils;
+import io.github.indroDevTeam.indroLib.objects.warps.Warp;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class RankUtils {
 
@@ -145,6 +152,15 @@ public class RankUtils {
      */
     public static boolean rankExist(String rankId, SQLUtils sqlUtils) {
         return sqlUtils.rowExists("rankID", rankId, "rankPresets");
+    }
+
+    public static List<Rank> getRanks(SQLUtils sqlUtils) {
+        List<Rank> rankList = new ArrayList<>();
+        List<Object> rankIds = sqlUtils.getColumn("rankID", "rankPresets");
+        int number = sqlUtils.countRows("rankPresets");
+        for (int i = 0; i < number; i++)
+            rankList.add(getRank((String) rankIds.get(i), sqlUtils));
+        return rankList;
     }
 
     /**
