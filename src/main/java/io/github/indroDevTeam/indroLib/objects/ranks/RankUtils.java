@@ -130,6 +130,24 @@ public class RankUtils {
     }
 
     /**
+     * @param rank rank object being checked for
+     * @param sqlUtils sql connection
+     * @return true if it exists and false otherwise
+     */
+    public static boolean rankExist(Rank rank, SQLUtils sqlUtils) {
+        return sqlUtils.rowExists("rankID", rank.getId(), "rankPresets");
+    }
+
+    /**
+     * @param rankId rank unique id being checked for
+     * @param sqlUtils sql connection
+     * @return true if it exists and false otherwise
+     */
+    public static boolean rankExist(String rankId, SQLUtils sqlUtils) {
+        return sqlUtils.rowExists("rankID", rankId, "rankPresets");
+    }
+
+    /**
      * @param color Converts string of a ChatColour name to a ChatColour
      */
     public static ChatColor readColour(String color) {
