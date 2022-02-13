@@ -125,7 +125,7 @@ public class RankUtils {
         String d = rank.getDisplay();
         String name = player.getName();
 
-        String finalName = s + lb + p + d + s + rb + n + name + ChatColor.WHITE + " ";
+        String finalName = s + lb + p + d + s + rb + n + " " + name + ChatColor.WHITE + "";
         player.setPlayerListName(finalName);
         player.setDisplayName(finalName);
     }
