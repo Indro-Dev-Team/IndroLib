@@ -124,6 +124,7 @@ public class RankUtils {
         String name = player.getName();
 
         player.setCustomName(s + lb + p + d + s + rb + n + name + ChatColor.WHITE + "");
+        player.setCustomNameVisible(true);
     }
 
     /**
