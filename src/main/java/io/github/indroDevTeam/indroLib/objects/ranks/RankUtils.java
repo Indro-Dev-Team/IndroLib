@@ -123,8 +123,9 @@ public class RankUtils {
         String d = rank.getDisplay();
         String name = player.getName();
 
-        player.setCustomName(s + lb + p + d + s + rb + n + name + ChatColor.WHITE + "");
-        player.setCustomNameVisible(true);
+        String finalName = s + lb + p + d + s + rb + n + name + ChatColor.WHITE + "";
+        player.setPlayerListName(finalName);
+        player.setDisplayName(finalName);
     }
 
     /**
