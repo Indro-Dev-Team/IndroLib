@@ -119,11 +119,13 @@ public class RankUtils {
         ChatColor p = rank.getPrimary();
         ChatColor s = rank.getSecondary();
         String lb = rank.getlBrace();
+        if (lb == null) lb = "[";
         String rb = rank.getrBrace();
+        if (rb == null) lb = "]";
         String d = rank.getDisplay();
         String name = player.getName();
 
-        String finalName = s + lb + p + d + s + rb + n + name + ChatColor.WHITE + "";
+        String finalName = s + lb + p + d + s + rb + n + name + ChatColor.WHITE + " ";
         player.setPlayerListName(finalName);
         player.setDisplayName(finalName);
     }
