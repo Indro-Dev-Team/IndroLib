@@ -13,7 +13,7 @@ public class Main {
     //Get instance of connector
     private SQLConnector sqlConnector;
     //initialize the utils 
-    private SQLUtils sqlUtils = new SQLUtils(sqlConnector);
+    private SQLUtils sqlUtils;
     
     public void onEnable() {
         //create a new table
@@ -26,6 +26,8 @@ public class Main {
             false, //false = MySQL, true = SQLite
             this //instance of plugin
         );
+        
+        sqlUtils = new SQLUtils(sqlConnector);
         
         sqlUtils.createTable(
             "first_table", //name if firsts table
