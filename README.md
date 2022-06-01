@@ -5,7 +5,7 @@ Library of methods used for all the Indro dev team plugins
 -
 
 <h5>Using the SQLConnector and SQLUtils</h5>
-```java
+```
     import io.github.indroDevTeam.indroLib.datamanager.SQLConnector;
     import io.github.indroDevTeam.indroLib.datamanager.SQLUtils;
 
